@@ -1,0 +1,35 @@
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${ITOP_DB_NAME}
+      - MYSQL_USER=${ITOP_DB_USER}
+      - MYSQL_PASSWORD=${ITOP_DB_PASS}
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+
+  itop:
+    image: iscarab/itop:3.2.0-base
+    build:
+      context: .
+      args:
+        ITOP_DOWNLOAD_URL: ${ITOP_DOWNLOAD_URL}
+        IMAGE_TAG: ${IMAGE_TAG}
+    restart: always
+    env_file:
+      - .env
+    links:
+      - db
+    depends_on:
+      - db
+    ports:
+      - "80:80"
+    volumes:
+      - ./data/itop/conf:/var/www/html/conf:ro
+      - ./data/itop/extensions:/var/www/html/extensions
+      - ./data/itop/data:/var/www/html/data
+      - ./data/itop/logs:/var/www/html/log
+      - ./data/itop/env-production:/var/www/html/env-production
+      - ./data/itop/env-toolkit:/var/www/html/env-toolkit
