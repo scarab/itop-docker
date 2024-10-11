@@ -27,7 +27,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./data/itop/conf:/var/www/html/conf:ro
+      - ./data/itop/conf:/var/www/html/conf:rw
       - ./data/itop/extensions:/var/www/html/extensions
       - ./data/itop/data:/var/www/html/data
       - ./data/itop/logs:/var/www/html/log

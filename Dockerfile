@@ -10,6 +10,7 @@ LABEL url="https://github.com/scarab/itop-docker"
 # BUILD_ARGUMENT_ENV = development | production
 ARG BUILD_ARGUMENT_ENV=development
 
+ARG USERNAME=www-data
 ARG ITOP_DOWNLOAD_URL
 ARG APP_DIR=/var/www/html
 ENV APP_DIR=$APP_DIR
@@ -39,9 +40,13 @@ RUN mkdir -p ${APP_DIR} \
     && curl -SL -o /tmp/itop.zip ${ITOP_DOWNLOAD_URL:?} \
     && unzip /tmp/itop.zip -d ${ITOP_TMP}/ \
     && mv ${ITOP_TMP}/web/* ${APP_DIR} \
+    && mkdir -p ${APP_DIR}/env-production ${APP_DIR}/env-toolkit \
     && chmod -R a=r ${APP_DIR} \
     && find ${APP_DIR} -type d -exec chmod a+x {} \; \
-    && chmod u+w ${APP_DIR}
+    && chmod u+w ${APP_DIR} \
+    && chown ${USERNAME}:${USERNAME} ${APP_DIR} \
+    && chown -R ${USERNAME} ${APP_DIR}/conf ${APP_DIR}/data ${APP_DIR}/log ${APP_DIR}/extensions ${APP_DIR}/env-production ${APP_DIR}/env-toolkit \
+    && chmod -R ug+w ${APP_DIR}/conf ${APP_DIR}/data ${APP_DIR}/log ${APP_DIR}/extensions ${APP_DIR}/env-production ${APP_DIR}/env-toolkit
 
 WORKDIR /var/www/html
 
