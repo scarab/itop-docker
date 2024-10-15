@@ -4,7 +4,7 @@ FROM php:8.2-apache
 
 LABEL authors="scarab"
 LABEL title="Docker image with Combodo iTop"
-LABEL version="0.1"
+LABEL version="0.2"
 LABEL url="https://github.com/scarab/itop-docker"
 
 # BUILD_ARGUMENT_ENV = development | production
@@ -21,7 +21,7 @@ ENV ARTIFACTS_TMP=$ARTIFACTS_TMP
 COPY artifacts ${ARTIFACTS_TMP:?}
 
 RUN apt-get update \
-    && apt-get install -y curl unzip graphviz \
+    && apt-get install -y curl unzip graphviz default-mysql-client \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && mv "$PHP_INI_DIR/php.ini-$BUILD_ARGUMENT_ENV" "$PHP_INI_DIR/php.ini" \
